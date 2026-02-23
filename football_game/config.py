@@ -1,0 +1,42 @@
+import pygame
+
+# Screen
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 800
+FPS = 60
+
+# Colors
+FIELD_GREEN = (34, 139, 34)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+
+# Field dimensions (in pixels)
+FIELD_WIDTH = 1000
+FIELD_HEIGHT = 600
+FIELD_X = (SCREEN_WIDTH - FIELD_WIDTH) // 2
+FIELD_Y = (SCREEN_HEIGHT - FIELD_HEIGHT) // 2
+
+# Goals
+GOAL_WIDTH = 100  # Opening size
+GOAL_DEPTH = 20
+
+# Players
+PLAYER_WIDTH = 30
+PLAYER_HEIGHT = 20
+PLAYER_SPEED = 5
+PLAYER_ROTATION_SPEED = 5  # degrees per frame
+PLAYER_KICK_DISTANCE = 60
+PLAYER_KICK_ANGLE = 45  # degrees for kick arc (half-angle)
+
+# Ball
+BALL_RADIUS = 10
+BALL_FRICTION = 0.98  # velocity multiplier per frame
+BALL_BOUNCE_DAMPING = 0.7
+BALL_MAX_SPEED = 20
+
+# Physics
+WALL_BOUNCE_DAMPING = 0.8
+EPISODE_TIME_LIMIT = 60  # seconds
