@@ -102,3 +102,53 @@ def kick_ball(player, ball):
     if speed > BALL_MAX_SPEED:
         ball.vx = (ball.vx / speed) * BALL_MAX_SPEED
         ball.vy = (ball.vy / speed) * BALL_MAX_SPEED
+
+def dribble_ball(player, ball):
+    """Move ball with player when close and aligned (dribbling)."""
+    from config import PLAYER_KICK_DISTANCE
+    
+    # Calculate distance to ball
+    dx = ball.x - player.x
+    dy = ball.y - player.y
+    distance = math.sqrt(dx * dx + dy * dy)
+    
+    # Only dribble if ball is close
+    if distance > PLAYER_KICK_DISTANCE * 0.6:
+        return
+    
+    # Calculate ball angle relative to player
+    ball_angle = math.degrees(math.atan2(dy, dx))
+    angle_diff = abs((ball_angle - player.angle + 180) % 360 - 180)
+    
+    # Only dribble if ball is in front (within 60 degrees)
+    if angle_diff > 60:
+        return
+    
+    # Move ball to stay in front of player
+    from config import PLAYER_WIDTH
+    offset_distance = PLAYER_WIDTH * 0.8
+    dx, dy = player.get_facing_vector()
+    ball.x = player.x + dx * offset_distance
+    ball.y = player.y + dy * offset_distance
+    
+    # Give ball slight forward velocity
+    ball.vx = dx * 2
+    ball.vy = dy * 2
+
+def check_goal(ball):
+    """Check if ball is in either goal. Returns 'left', 'right', or None."""
+    from config import FIELD_X, FIELD_Y, FIELD_WIDTH, FIELD_HEIGHT, GOAL_WIDTH, BALL_RADIUS
+    
+    # Calculate goal y-range
+    goal_top = FIELD_Y + (FIELD_HEIGHT - GOAL_WIDTH) // 2
+    goal_bottom = goal_top + GOAL_WIDTH
+    
+    # Check left goal
+    if ball.x + BALL_RADIUS < FIELD_X and goal_top < ball.y < goal_bottom:
+        return "left"
+    
+    # Check right goal
+    if ball.x - BALL_RADIUS > FIELD_X + FIELD_WIDTH and goal_top < ball.y < goal_bottom:
+        return "right"
+    
+    return None

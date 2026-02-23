@@ -1,7 +1,13 @@
 import pygame
 import sys
-from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, EPISODE_TIME_LIMIT
 from entities import Player, Ball
+from state import GameState
+from physics import (
+    check_ball_wall_collision,
+    check_player_wall_collision,
+    check_goal
+)
 
 class Game:
     def __init__(self):
@@ -10,23 +16,7 @@ class Game:
         pygame.display.set_caption("2D Football Game")
         self.clock = pygame.time.Clock()
         self.running = True
-        
-        # Create players
-        self.player1 = Player(
-            x=SCREEN_WIDTH // 2 - 200,
-            y=SCREEN_HEIGHT // 2,
-            angle=0,
-            color=(255, 0, 0)  # Red
-        )
-        self.player2 = Player(
-            x=SCREEN_WIDTH // 2 + 200,
-            y=SCREEN_HEIGHT // 2,
-            angle=180,
-            color=(0, 0, 255)  # Blue
-        )
-        
-        # Create ball
-        self.ball = Ball(x=SCREEN_WIDTH // 2, y=SCREEN_HEIGHT // 2, vx=0, vy=0)
+        self.state = GameState()
         
     def handle_events(self):
         for event in pygame.event.get():
@@ -36,31 +26,44 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
     
-    def update(self):
-        from physics import check_ball_wall_collision, check_player_wall_collision
-        
+    def update(self, dt):
         # Update ball
-        self.ball.update()
-        check_ball_wall_collision(self.ball)
+        self.state.ball.update()
+        check_ball_wall_collision(self.state.ball)
+        
+        # Check for goals
+        goal = check_goal(self.state.ball)
+        if goal == "left":
+            self.state.increment_score(2)
+            self.state.reset_positions()
+        elif goal == "right":
+            self.state.increment_score(1)
+            self.state.reset_positions()
         
         # Keep players in bounds
-        check_player_wall_collision(self.player1)
-        check_player_wall_collision(self.player2)
+        check_player_wall_collision(self.state.player1)
+        check_player_wall_collision(self.state.player2)
+        
+        # Update timer
+        timed_out = self.state.update_episode_time(dt)
+        if timed_out:
+            self.state.reset_positions()
     
     def render(self):
-        from renderer import render_field, render_player, render_ball
+        from renderer import render_field, render_player, render_ball, render_scoreboard
         render_field(self.screen)
-        render_ball(self.screen, self.ball)
-        render_player(self.screen, self.player1)
-        render_player(self.screen, self.player2)
+        render_ball(self.screen, self.state.ball)
+        render_player(self.screen, self.state.player1)
+        render_player(self.screen, self.state.player2)
+        render_scoreboard(self.screen, self.state.score1, self.state.score2)
         pygame.display.flip()
     
     def run(self):
         while self.running:
+            dt = self.clock.tick(FPS) / 1000.0
             self.handle_events()
-            self.update()
+            self.update(dt)
             self.render()
-            self.clock.tick(FPS)
         pygame.quit()
         sys.exit()
 

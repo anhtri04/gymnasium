@@ -66,3 +66,19 @@ def render_ball(screen, ball):
     end_x = int(ball.x + ball.vx * 3)
     end_y = int(ball.y + ball.vy * 3)
     pygame.draw.line(screen, (255, 255, 0), (int(ball.x), int(ball.y)), (end_x, end_y), 2)
+
+def render_scoreboard(screen, score1, score2):
+    """Render scoreboard at top of screen."""
+    from config import SCREEN_WIDTH, WHITE, BLACK
+    import pygame
+    
+    # Fonts
+    pygame.font.init()
+    font = pygame.font.SysFont('Arial', 48)
+    small_font = pygame.font.SysFont('Arial', 24)
+    
+    # Draw score
+    score_text = f"{score1} - {score2}"
+    text_surface = font.render(score_text, True, WHITE)
+    text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 30))
+    screen.blit(text_surface, text_rect)
