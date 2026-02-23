@@ -24,10 +24,11 @@ from config import (
 class FootballEnv(gym.Env):
     metadata = {'render_modes': ['human', 'rgb_array'], 'render_fps': FPS}
     
-    def __init__(self, render_mode: Optional[str] = None):
+    def __init__(self, render_mode: Optional[str] = None, opponent_type: str = "stationary"):
         super().__init__()
         
         self.render_mode = render_mode
+        self.opponent_type = opponent_type
         self.state = GameState()
         
         # Observation space: 10 continuous values normalized to [0, 1]
@@ -93,9 +94,29 @@ class FootballEnv(gym.Env):
             if is_ball_in_kick_arc(self.state.player1, self.state.ball):
                 kick_ball(self.state.player1, self.state.ball)
         
+        # Move opponent (player 2) based on opponent_type
+        if self.opponent_type == "random":
+            # Random action for player 2
+            opponent_action = self.action_space.sample()
+            if opponent_action == 0:
+                self.state.player2.move_forward(PLAYER_SPEED)
+            elif opponent_action == 1:
+                self.state.player2.move_backward(PLAYER_SPEED)
+            elif opponent_action == 2:
+                self.state.player2.rotate(PLAYER_ROTATION_SPEED)
+            elif opponent_action == 3:
+                self.state.player2.rotate(-PLAYER_ROTATION_SPEED)
+            elif opponent_action == 4:
+                if is_ball_in_kick_arc(self.state.player2, self.state.ball):
+                    kick_ball(self.state.player2, self.state.ball)
+        elif self.opponent_type == "stationary":
+            # Do nothing
+            pass
+        
         # Update physics
         self.state.ball.update()
         check_ball_wall_collision(self.state.ball)
+        check_player_wall_collision(self.state.player1)
         check_player_wall_collision(self.state.player2)
         
         # Calculate reward and termination
