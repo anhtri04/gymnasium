@@ -76,8 +76,54 @@ class FootballEnv(gym.Env):
         info = {'episode_time': 0.0, 'score1': 0, 'score2': 0}
         return self._get_obs(), info
     
-    def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict]:
-        raise NotImplementedError("Will implement in Task 4")
+    def step(self, action: int):
+        assert self.action_space.contains(action)
+        
+        # Execute action
+        if action == 0:
+            self.state.player1.move_forward(PLAYER_SPEED)
+            dribble_ball(self.state.player1, self.state.ball)
+        elif action == 1:
+            self.state.player1.move_backward(PLAYER_SPEED)
+        elif action == 2:
+            self.state.player1.rotate(PLAYER_ROTATION_SPEED)
+        elif action == 3:
+            self.state.player1.rotate(-PLAYER_ROTATION_SPEED)
+        elif action == 4:
+            if is_ball_in_kick_arc(self.state.player1, self.state.ball):
+                kick_ball(self.state.player1, self.state.ball)
+        
+        # Update physics
+        self.state.ball.update()
+        check_ball_wall_collision(self.state.ball)
+        check_player_wall_collision(self.state.player2)
+        
+        # Calculate reward and termination
+        goal = check_goal(self.state.ball)
+        reward = 0.0
+        terminated = False
+        
+        if goal == "right":
+            self.state.increment_score(1)
+            reward = 1.0
+            terminated = True
+        elif goal == "left":
+            self.state.increment_score(2)
+            reward = -1.0
+            terminated = True
+        
+        # Check time limit
+        dt = 1.0 / FPS
+        truncated = self.state.update_episode_time(dt)
+        
+        info = {
+            'episode_time': self.state.episode_time,
+            'score1': self.state.score1,
+            'score2': self.state.score2,
+            'ball_in_kick_arc': is_ball_in_kick_arc(self.state.player1, self.state.ball)
+        }
+        
+        return self._get_obs(), reward, terminated, truncated, info
     
     def render(self):
         raise NotImplementedError("Will implement in Task 6")

@@ -36,3 +36,23 @@ def test_observation_after_step():
     obs1, _ = env.reset()
     obs2, _, _, _, _ = env.step(0)
     assert not np.array_equal(obs1, obs2)
+
+def test_step_returns_correct_tuple():
+    from football_env import FootballEnv
+    env = FootballEnv()
+    env.reset()
+    obs, reward, terminated, truncated, info = env.step(0)
+    assert obs.shape == (10,)
+    assert isinstance(reward, (int, float))
+    assert isinstance(terminated, bool)
+    assert isinstance(truncated, bool)
+    assert isinstance(info, dict)
+
+def test_step_moves_player():
+    from football_env import FootballEnv
+    env = FootballEnv()
+    env.reset()
+    initial_x = env.state.player1.x
+    for _ in range(10):
+        env.step(0)
+    assert env.state.player1.x != initial_x
