@@ -24,6 +24,21 @@ pip install -r requirements.txt
 python main.py
 ```
 
+## Controls
+
+**Player 1 (Red - Left Side):**
+- `W` / `S` - Move forward/backward
+- `A` / `D` - Rotate left/right
+- `SPACE` - Kick ball
+
+**Player 2 (Blue - Right Side):**
+- `UP` / `DOWN` - Move forward/backward
+- `LEFT` / `RIGHT` - Rotate left/right
+- `ENTER` - Kick ball
+
+**General:**
+- `ESC` - Quit game
+
 ## Project Structure
 
 ```

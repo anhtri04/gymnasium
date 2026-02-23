@@ -6,8 +6,11 @@ from state import GameState
 from physics import (
     check_ball_wall_collision,
     check_player_wall_collision,
-    check_goal
+    check_goal,
+    check_ball_player_collision,
+    check_player_player_collision
 )
+from controls import handle_player1_controls, handle_player2_controls
 
 class Game:
     def __init__(self):
@@ -27,9 +30,23 @@ class Game:
                     self.running = False
     
     def update(self, dt):
+        # Get keyboard state
+        keys = pygame.key.get_pressed()
+        
+        # Handle player controls
+        handle_player1_controls(keys, self.state.player1, self.state.ball)
+        handle_player2_controls(keys, self.state.player2, self.state.ball)
+        
         # Update ball
         self.state.ball.update()
         check_ball_wall_collision(self.state.ball)
+        
+        # Check ball-player collisions (ball bounces off players)
+        check_ball_player_collision(self.state.ball, self.state.player1)
+        check_ball_player_collision(self.state.ball, self.state.player2)
+        
+        # Check player-player collisions (players block each other)
+        check_player_player_collision(self.state.player1, self.state.player2)
         
         # Check for goals
         goal = check_goal(self.state.ball)
