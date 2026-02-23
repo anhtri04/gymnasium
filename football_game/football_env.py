@@ -45,10 +45,36 @@ class FootballEnv(gym.Env):
         self.clock = None
         
     def _get_obs(self) -> np.ndarray:
-        raise NotImplementedError("Will implement in Task 2")
+        # Normalize positions to [0, 1]
+        p1_x_norm = self.state.player1.x / SCREEN_WIDTH
+        p1_y_norm = self.state.player1.y / SCREEN_HEIGHT
+        p2_x_norm = self.state.player2.x / SCREEN_WIDTH
+        p2_y_norm = self.state.player2.y / SCREEN_HEIGHT
+        ball_x_norm = self.state.ball.x / SCREEN_WIDTH
+        ball_y_norm = self.state.ball.y / SCREEN_HEIGHT
+        
+        # Normalize angles to [0, 1]
+        p1_angle_norm = self.state.player1.angle / 360.0
+        p2_angle_norm = self.state.player2.angle / 360.0
+        
+        # Normalize velocities to [0, 1]
+        max_speed = 20.0
+        ball_vx_norm = (self.state.ball.vx / max_speed + 1) / 2
+        ball_vy_norm = (self.state.ball.vy / max_speed + 1) / 2
+        
+        obs = np.array([
+            p1_x_norm, p1_y_norm, p1_angle_norm,
+            p2_x_norm, p2_y_norm, p2_angle_norm,
+            ball_x_norm, ball_y_norm, ball_vx_norm, ball_vy_norm
+        ], dtype=np.float32)
+        
+        return np.clip(obs, 0.0, 1.0)
     
-    def reset(self, seed: Optional[int] = None, options: Optional[Dict] = None) -> Tuple[np.ndarray, Dict]:
-        raise NotImplementedError("Will implement in Task 3")
+    def reset(self, seed: Optional[int] = None, options: Optional[Dict] = None):
+        super().reset(seed=seed)
+        self.state.reset_positions()
+        info = {'episode_time': 0.0, 'score1': 0, 'score2': 0}
+        return self._get_obs(), info
     
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict]:
         raise NotImplementedError("Will implement in Task 4")
