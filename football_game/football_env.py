@@ -126,7 +126,42 @@ class FootballEnv(gym.Env):
         return self._get_obs(), reward, terminated, truncated, info
     
     def render(self):
-        raise NotImplementedError("Will implement in Task 6")
+        if self.render_mode is None:
+            return None
+        
+        if self.render_mode == 'human':
+            import pygame
+            from renderer import render_field, render_player, render_ball, render_scoreboard
+            
+            if self.screen is None:
+                pygame.init()
+                self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+                pygame.display.set_caption("2D Football Game")
+                self.clock = pygame.time.Clock()
+            
+            render_field(self.screen)
+            render_ball(self.screen, self.state.ball)
+            render_player(self.screen, self.state.player1)
+            render_player(self.screen, self.state.player2)
+            render_scoreboard(self.screen, self.state.score1, self.state.score2)
+            pygame.display.flip()
+            
+            if self.clock:
+                self.clock.tick(FPS)
+        
+        elif self.render_mode == 'rgb_array':
+            import pygame
+            from renderer import render_field, render_player, render_ball, render_scoreboard
+            
+            surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+            render_field(surface)
+            render_ball(surface, self.state.ball)
+            render_player(surface, self.state.player1)
+            render_player(surface, self.state.player2)
+            render_scoreboard(surface, self.state.score1, self.state.score2)
+            
+            frame = pygame.surfarray.array3d(surface)
+            return np.transpose(frame, (1, 0, 2))
     
     def close(self):
         if self.screen is not None:

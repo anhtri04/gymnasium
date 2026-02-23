@@ -56,3 +56,10 @@ def test_step_moves_player():
     for _ in range(10):
         env.step(0)
     assert env.state.player1.x != initial_x
+
+def test_render_no_crash():
+    from football_env import FootballEnv
+    env = FootballEnv(render_mode='human')
+    env.reset()
+    env.render()
+    env.close()
