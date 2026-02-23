@@ -67,9 +67,9 @@ def render_ball(screen, ball):
     end_y = int(ball.y + ball.vy * 3)
     pygame.draw.line(screen, (255, 255, 0), (int(ball.x), int(ball.y)), (end_x, end_y), 2)
 
-def render_scoreboard(screen, score1, score2):
-    """Render scoreboard at top of screen."""
-    from config import SCREEN_WIDTH, WHITE, BLACK
+def render_scoreboard(screen, score1, score2, episode_time):
+    """Render scoreboard and timer at top of screen."""
+    from config import SCREEN_WIDTH, WHITE, EPISODE_TIME_LIMIT
     import pygame
     
     # Fonts
@@ -82,3 +82,12 @@ def render_scoreboard(screen, score1, score2):
     text_surface = font.render(score_text, True, WHITE)
     text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, 30))
     screen.blit(text_surface, text_rect)
+    
+    # Draw timer below score
+    time_remaining = max(0, EPISODE_TIME_LIMIT - int(episode_time))
+    minutes = time_remaining // 60
+    seconds = time_remaining % 60
+    timer_text = f"Time: {minutes}:{seconds:02d}"
+    timer_surface = small_font.render(timer_text, True, WHITE)
+    timer_rect = timer_surface.get_rect(center=(SCREEN_WIDTH // 2, 65))
+    screen.blit(timer_surface, timer_rect)
