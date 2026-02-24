@@ -219,7 +219,7 @@ class FootballEnv(gym.Env):
             render_ball(self.screen, self.state.ball)
             render_player(self.screen, self.state.player1)
             render_player(self.screen, self.state.player2)
-            render_scoreboard(self.screen, self.state.score1, self.state.score2)
+            render_scoreboard(self.screen, self.state.score1, self.state.score2, self.state.episode_time)
             pygame.display.flip()
             
             if self.clock:
