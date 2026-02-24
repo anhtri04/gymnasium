@@ -68,6 +68,7 @@ def main():
         ("configs/shooting_2a.yaml", 50000),    # Wide goal, ball at feet
         ("configs/shooting_2b.yaml", 50000),    # Approach and kick
         ("configs/shooting_2c.yaml", 50000),    # Standard goal accuracy
+        ("configs/full_game_3.yaml", 100000),   # Full game with opponent
     ]
     
     previous_model = None
