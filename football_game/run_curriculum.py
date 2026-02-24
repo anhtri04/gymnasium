@@ -66,6 +66,7 @@ def main():
         ("configs/ball_control_1b.yaml", 50000),  # 1 ball medium distance
         ("configs/ball_control_1c.yaml", 50000),  # Must rotate first
         ("configs/shooting_2a.yaml", 50000),    # Wide goal, ball at feet
+        ("configs/shooting_2b.yaml", 50000),    # Approach and kick
     ]
     
     previous_model = None

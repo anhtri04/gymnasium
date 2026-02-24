@@ -1,0 +1,49 @@
+# Shooting Stage 2b: Approach and kick
+# Teaches: moving toward ball then kicking
+# Builds on: Stage 2a (learned to kick ball at feet)
+
+mode: shooting
+stage: "2b"
+stage_name: "Shooting - Approach and Kick"
+
+# Standard field size
+field:
+  width: 1000
+  height: 600
+  start_x: 100
+  start_y: 100
+
+# Ball is slightly ahead, not at feet
+balls:
+  - x: 50
+    y: 0
+    vx: 0
+    vy: 0
+    at_feet: false  # Ball is ahead, not at feet
+
+# Agent starts midfield, ball 50px ahead
+agent:
+  x: 600
+  y: 400
+  angle: 0  # Facing toward ball and goal
+
+# No opponent
+opponent: null
+
+# Goal configuration - still wide but smaller than 2a
+goal:
+  width: 200  # Reduced from 300
+  y_center: 400
+
+# Success criteria
+success_criteria:
+  min_score_rate: 0.6  # Slightly lower than 2a
+  min_episodes: 50
+  max_steps: 1000
+
+# Rewards
+rewards:
+  goal: 1.0
+  kick: 0.05
+  ball_progress: 0.08  # Slightly lower than 2a
+  max_steps: 1000
