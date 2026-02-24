@@ -1,0 +1,50 @@
+# Shooting Stage 2a: Wide goal, ball at feet
+# Teaches: kicking toward target
+
+mode: shooting
+stage: "2a"
+stage_name: "Shooting - Wide Goal, Ball at Feet"
+
+# Standard field but focused on goal area
+field:
+  width: 1000
+  height: 600
+  start_x: 100
+  start_y: 100
+
+# Single ball at agent's feet
+balls:
+  - x: 0  # Will be placed at agent position + offset
+    y: 0
+    vx: 0
+    vy: 0
+    at_feet: true  # Special flag to place at feet
+
+# Agent starting position (midfield, facing goal)
+agent:
+  x: 600
+  y: 400
+  angle: 0
+
+# No opponent
+opponent: null
+
+# Goal configuration
+# Goal is on the right side (player 2's side)
+# In shooting mode, we widen the goal significantly
+goal:
+  width: 300  # Much wider than normal (100)
+  y_center: 400
+
+# Success criteria
+success_criteria:
+  min_score_rate: 0.7  # Score 70% of the time
+  min_episodes: 50
+  consecutive_success_episodes: 10
+
+# Rewards
+rewards:
+  goal: 1.0
+  kick: 0.1  # Reward for kicking
+  ball_progress: 0.05  # Reward for ball moving toward goal
+  max_steps: 500

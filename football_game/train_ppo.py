@@ -17,7 +17,7 @@ def train():
     print("Initializing environment...")
     env = make_env()
     
-    print("Creating PPO model...")
+    print("Creating PPO model from scratch...")
     model = PPO(
         "MlpPolicy",
         env,
@@ -31,6 +31,7 @@ def train():
         clip_range=0.2,
         tensorboard_log="./tensorboard_logs/"
     )
+    total_timesteps = 1_000_000
     
     # Save checkpoints every 100k steps
     checkpoint_callback = CheckpointCallback(

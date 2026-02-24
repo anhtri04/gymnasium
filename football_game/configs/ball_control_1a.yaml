@@ -1,0 +1,49 @@
+# Ball Control Stage 1a: Multiple balls, close proximity
+# Teaches: movement, rotation, chasing, touching
+
+mode: ball_control
+stage: "1a"
+stage_name: "Ball Control - Close Balls"
+
+# Field configuration (small field)
+field:
+  width: 400
+  height: 300
+  start_x: 400  # Centered on screen (FIELD_X = 100 in full game)
+  start_y: 250
+
+# Multiple balls close together
+balls:
+  - x: 500  # Relative to field start
+    y: 350
+    vx: 0
+    vy: 0
+  - x: 600
+    y: 400
+    vx: 0
+    vy: 0
+  - x: 550
+    y: 300
+    vx: 0
+    vy: 0
+
+# Agent starting position (center of field)
+agent:
+  x: 600
+  y: 400
+  angle: 0
+
+# No opponent in training
+opponent: null
+
+# Success criteria for stage advancement
+success_criteria:
+  min_avg_reward: 0.5  # Average 0.5 reward per step
+  min_episodes: 50
+  consecutive_success_episodes: 10
+
+# Rewards (dense feedback)
+rewards:
+  touch: 0.02  # Higher reward for touching
+  proximity: 0.001  # Small reward for getting closer
+  max_steps: 1000  # Episode ends after 1000 steps or timeout

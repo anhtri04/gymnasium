@@ -91,6 +91,6 @@ A top-down 2D football game where two AI agents learn to play against each other
 
 - [ ] Add a **stamina system** — sprinting drains energy, affects movement speed
 - [ ] Add a **tackle action** — knock the ball away from an opponent within range
-- [ ] Expand to 2v2 with team coordination
+- [ ] Expand to 5v5 with team coordination
 - [ ] Let a human player compete against the trained AI
 - [ ] Add a simple main menu and match replay system
