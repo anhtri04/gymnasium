@@ -1,0 +1,50 @@
+# Shooting Stage 2c: Narrow goal, standard distance
+# Teaches: accuracy and positioning for standard goal
+# Builds on: Stage 2b (learned approach + kick)
+
+mode: shooting
+stage: "2c"
+stage_name: "Shooting - Standard Goal Accuracy"
+
+# Standard field
+field:
+  width: 1000
+  height: 600
+  start_x: 100
+  start_y: 100
+
+# Ball at standard distance (100px ahead - normal gameplay distance)
+balls:
+  - x: 100
+    y: 0
+    vx: 0
+    vy: 0
+    at_feet: false
+
+# Agent starts at midfield
+agent:
+  x: 600
+  y: 400
+  angle: 0
+
+# No opponent
+opponent: null
+
+# Goal configuration - STANDARD width (normal gameplay)
+goal:
+  width: 100  # Normal goal width
+  y_center: 400
+
+# Success criteria
+success_criteria:
+  min_score_rate: 0.5  # Lower rate due to narrower goal
+  min_episodes: 50
+  max_steps: 1500
+
+# Rewards
+rewards:
+  goal: 1.0
+  kick: 0.03  # Lower kick reward (need accuracy, not just kicks)
+  ball_progress: 0.05  # Reward for ball moving toward goal
+  ball_in_goal_area: 0.1  # Bonus for ball entering goal area
+  max_steps: 1500
