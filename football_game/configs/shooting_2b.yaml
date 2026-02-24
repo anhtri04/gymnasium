@@ -1,52 +1,53 @@
-# Shooting Stage 2b: Approach and kick
-# Teaches: moving toward ball then kicking
-# Uses standard 10-dim observation for weight transfer compatibility
+# Shooting Stage 2b: MEDIUM goal, ball NEAR feet
+# Teaches: approach then kick
+# Field: MEDIUM (700x450) with MEDIUM goal (200px)
 
 mode: shooting
 stage: "2b"
 stage_name: "Shooting - Approach and Kick"
 
-# Standard field
+# MEDIUM field
 field:
-  width: 1000
-  height: 600
-  start_x: 100
-  start_y: 100
+  width: 700
+  height: 450
+  start_x: 250
+  start_y: 175
 
-# Single ball ahead of agent
+# Ball NEAR feet (must move to it)
 balls:
-  - x: 80  # 80px ahead
+  - x: 50  # 50px ahead
     y: 0
     vx: 0
     vy: 0
+    at_feet: false
 
-# Agent starting position
+# Agent position
 agent:
-  x: 600
+  x: 500
   y: 400
   angle: 0
 
-# Stationary opponent for observation consistency
+# Opponent
 opponent:
   type: "stationary"
-  x: 900
+  x: 800
   y: 400
   angle: 180
 
-# Goal configuration
+# MEDIUM goal
 goal:
-  width: 200
+  width: 200  # 2x standard
   y_center: 400
 
 # Success criteria
 success_criteria:
   min_score_rate: 0.6
   min_episodes: 50
-  max_steps: 1000
+  max_steps: 600
 
 # Rewards
 rewards:
   goal: 1.0
   kick: 0.05
   ball_progress: 0.08
-  max_steps: 1000
+  max_steps: 600

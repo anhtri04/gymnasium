@@ -1,6 +1,6 @@
 # Ball Control Stage 1c: Must rotate to face ball
-# Teaches: directional control, rotation before movement
-# Uses standard 10-dim observation for weight transfer compatibility
+# Teaches: directional control
+# Field: MEDIUM (500x350)
 
 mode: ball_control
 stage: "1c"
@@ -13,9 +13,9 @@ field:
   start_x: 350
   start_y: 225
 
-# Single ball behind agent
+# Ball BEHIND agent (must rotate 180°)
 balls:
-  - x: 500  # Behind agent (must rotate 180)
+  - x: 500  # Behind agent (agent at 600, facing right, ball at 500)
     y: 400
     vx: 0
     vy: 0
@@ -24,9 +24,9 @@ balls:
 agent:
   x: 600
   y: 400
-  angle: 0  # Facing right, ball is behind
+  angle: 0  # Facing right, ball is at x=500 (behind)
 
-# Stationary opponent for observation consistency
+# Opponent
 opponent:
   type: "stationary"
   x: 800
@@ -41,7 +41,7 @@ success_criteria:
 
 # Rewards
 rewards:
-  touch: 0.1
-  rotate_toward: 0.01
-  proximity: 0.005
+  touch: 0.2
+  rotate_toward: 0.02
+  proximity: 0.008
   max_steps: 2000

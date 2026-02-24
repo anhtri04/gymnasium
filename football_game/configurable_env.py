@@ -207,3 +207,62 @@ class ConfigurableFootballEnv(FootballEnv):
     def _get_shooting_obs(self) -> np.ndarray:
         """DEPRECATED: Use standard _get_obs instead."""
         return self._get_obs()
+    
+    def render(self):
+        """Render with dynamic field bounds."""
+        if self.render_mode is None:
+            return None
+        
+        if self.render_mode == 'human':
+            import pygame
+            from renderer import render_field, render_player, render_ball, render_scoreboard
+            from config import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
+            
+            if self.screen is None:
+                pygame.init()
+                self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+                pygame.display.set_caption(f"2D Football - {self.train_config.get('stage_name', 'Game')}")
+                self.clock = pygame.time.Clock()
+            
+            # Get dynamic field bounds (set during _apply_config)
+            field_x = getattr(self, 'field_start_x', None)
+            field_y = getattr(self, 'field_start_y', None)
+            field_w = getattr(self, 'field_width', None)
+            field_h = getattr(self, 'field_height', None)
+            goal_w = getattr(self, 'goal_width', None)
+            
+            # Render with dynamic bounds
+            render_field(self.screen, field_x, field_y, field_w, field_h, goal_w)
+            render_ball(self.screen, self.state.ball)
+            render_player(self.screen, self.state.player1)
+            if self.state.player2:
+                render_player(self.screen, self.state.player2)
+            render_scoreboard(self.screen, self.state.score1, self.state.score2, self.state.episode_time)
+            pygame.display.flip()
+            
+            if self.clock:
+                self.clock.tick(FPS)
+        
+        elif self.render_mode == 'rgb_array':
+            import pygame
+            from renderer import render_field, render_player, render_ball, render_scoreboard
+            from config import SCREEN_WIDTH, SCREEN_HEIGHT
+            
+            surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+            
+            # Get dynamic field bounds
+            field_x = getattr(self, 'field_start_x', None)
+            field_y = getattr(self, 'field_start_y', None)
+            field_w = getattr(self, 'field_width', None)
+            field_h = getattr(self, 'field_height', None)
+            goal_w = getattr(self, 'goal_width', None)
+            
+            render_field(surface, field_x, field_y, field_w, field_h, goal_w)
+            render_ball(surface, self.state.ball)
+            render_player(surface, self.state.player1)
+            if self.state.player2:
+                render_player(surface, self.state.player2)
+            render_scoreboard(surface, self.state.score1, self.state.score2, self.state.episode_time)
+            
+            frame = pygame.surfarray.array3d(surface)
+            return frame.transpose((1, 0, 2))

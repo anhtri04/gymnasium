@@ -1,22 +1,22 @@
-# Ball Control Stage 1a: Single ball close to agent
-# Teaches: movement, rotation, chasing, touching
-# Uses standard 10-dim observation for weight transfer compatibility
+# Ball Control Stage 1a: Single ball VERY close to agent
+# Teaches: basic movement, rotation, touching
+# Field: SMALL (400x300) - confined space forces ball interaction
 
 mode: ball_control
 stage: "1a"
 stage_name: "Ball Control - Close Ball"
 
-# Field configuration
+# Field configuration - SMALL for dense interaction
 field:
   width: 400
   height: 300
   start_x: 400
   start_y: 250
 
-# Single ball (for 10-dim observation consistency)
+# Ball VERY close to agent (touching distance)
 balls:
-  - x: 620  # Close to agent
-    y: 420
+  - x: 600  # Same X as agent
+    y: 430  # Only 30px away from agent (400 + 30)
     vx: 0
     vy: 0
 
@@ -26,10 +26,10 @@ agent:
   y: 400
   angle: 0
 
-# Stationary opponent for observation consistency
+# Opponent far away, not interfering
 opponent:
   type: "stationary"
-  x: 750  # Far away, not interfering
+  x: 750
   y: 400
   angle: 180
 
@@ -41,6 +41,6 @@ success_criteria:
 
 # Rewards
 rewards:
-  touch: 0.05
-  proximity: 0.002
+  touch: 0.1  # High reward for touching
+  proximity: 0.005
   max_steps: 1000

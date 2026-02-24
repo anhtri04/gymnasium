@@ -1,52 +1,53 @@
-# Shooting Stage 2a: Wide goal, ball at feet
-# Teaches: kicking toward a target
-# Uses standard 10-dim observation for weight transfer compatibility
+# Shooting Stage 2a: WIDE goal, ball AT FEET
+# Teaches: basic kicking
+# Field: SMALL (600x400) with WIDE goal (300px)
 
 mode: shooting
 stage: "2a"
 stage_name: "Shooting - Wide Goal, Ball at Feet"
 
-# Standard field
+# SMALL field for focused practice
 field:
-  width: 1000
-  height: 600
-  start_x: 100
-  start_y: 100
+  width: 600
+  height: 400
+  start_x: 300
+  start_y: 200
 
-# Single ball at agent's feet
+# Ball AT AGENT'S FEET
 balls:
-  - x: 30  # At feet offset
+  - x: 0
     y: 0
     vx: 0
     vy: 0
+    at_feet: true  # Places ball right in front of agent
 
-# Agent starting position (midfield, facing goal)
+# Agent position (closer to goal for easier scoring)
 agent:
-  x: 600
+  x: 500
   y: 400
   angle: 0
 
-# Stationary opponent for observation consistency
+# Opponent
 opponent:
   type: "stationary"
-  x: 900
+  x: 700
   y: 400
   angle: 180
 
-# Goal configuration
+# WIDE goal for easy scoring
 goal:
-  width: 300
+  width: 300  # VERY wide (3x standard)
   y_center: 400
 
 # Success criteria
 success_criteria:
-  min_score_rate: 0.7
+  min_score_rate: 0.8  # Should score easily
   min_episodes: 50
-  max_steps: 500
+  max_steps: 300
 
 # Rewards
 rewards:
   goal: 1.0
   kick: 0.1
   ball_progress: 0.05
-  max_steps: 500
+  max_steps: 300

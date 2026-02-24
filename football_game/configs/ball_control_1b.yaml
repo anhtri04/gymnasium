@@ -1,35 +1,35 @@
 # Ball Control Stage 1b: Single ball at medium distance
-# Teaches: chasing, navigation to distant target
-# Uses standard 10-dim observation for weight transfer compatibility
+# Teaches: chasing, navigation
+# Field: MEDIUM (600x400)
 
 mode: ball_control
 stage: "1b"
 stage_name: "Ball Control - Chase Medium Distance"
 
-# Field configuration
+# Field configuration - MEDIUM
 field:
   width: 600
   height: 400
   start_x: 300
   start_y: 200
 
-# Single ball at medium distance
+# Ball at medium distance (100px away)
 balls:
-  - x: 450  # 150px away from agent
+  - x: 550  # 100px from agent at (450, 300)
     y: 350
     vx: 0
     vy: 0
 
 # Agent starting position
 agent:
-  x: 600
+  x: 450
   y: 300
   angle: 0
 
-# Stationary opponent for observation consistency
+# Opponent far away
 opponent:
   type: "stationary"
-  x: 850
+  x: 800
   y: 300
   angle: 180
 
@@ -41,6 +41,6 @@ success_criteria:
 
 # Rewards
 rewards:
-  touch: 0.08
-  proximity: 0.003
+  touch: 0.15
+  proximity: 0.005
   max_steps: 1500

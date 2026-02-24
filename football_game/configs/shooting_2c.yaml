@@ -1,53 +1,53 @@
-# Shooting Stage 2c: Standard goal accuracy
-# Teaches: precision with standard goal width
-# Uses standard 10-dim observation for weight transfer compatibility
+# Shooting Stage 2c: STANDARD goal, ball at NORMAL distance
+# Teaches: accuracy
+# Field: STANDARD (800x500) with STANDARD goal (100px)
 
 mode: shooting
 stage: "2c"
 stage_name: "Shooting - Standard Goal Accuracy"
 
-# Standard field
+# Field approaching standard size
 field:
-  width: 1000
-  height: 600
-  start_x: 100
-  start_y: 100
+  width: 800
+  height: 500
+  start_x: 200
+  start_y: 150
 
-# Single ball at standard distance
+# Ball at standard gameplay distance
 balls:
-  - x: 150  # 150px ahead
+  - x: 100  # 100px ahead (normal distance)
     y: 0
     vx: 0
     vy: 0
+    at_feet: false
 
-# Agent starting position
+# Agent position
 agent:
-  x: 600
+  x: 500
   y: 400
   angle: 0
 
-# Stationary opponent for observation consistency
+# Opponent
 opponent:
   type: "stationary"
   x: 900
   y: 400
   angle: 180
 
-# Goal configuration - STANDARD width
+# STANDARD goal (normal size)
 goal:
-  width: 100
+  width: 100  # Standard size
   y_center: 400
 
 # Success criteria
 success_criteria:
   min_score_rate: 0.5
   min_episodes: 50
-  max_steps: 1500
+  max_steps: 1000
 
 # Rewards
 rewards:
   goal: 1.0
   kick: 0.03
   ball_progress: 0.05
-  ball_in_goal_area: 0.1
-  max_steps: 1500
+  max_steps: 1000

@@ -5,35 +5,43 @@ from config import (
     GOAL_WIDTH, GOAL_DEPTH
 )
 
-def render_field(screen):
+def render_field(screen, field_x=None, field_y=None, field_width=None, field_height=None, goal_width=None):
+    """Render field with optional custom bounds."""
+    # Use provided values or fall back to defaults
+    fx = field_x if field_x is not None else FIELD_X
+    fy = field_y if field_y is not None else FIELD_Y
+    fw = field_width if field_width is not None else FIELD_WIDTH
+    fh = field_height if field_height is not None else FIELD_HEIGHT
+    gw = goal_width if goal_width is not None else GOAL_WIDTH
+    
     # Clear screen
     screen.fill((50, 50, 50))
     
     # Draw field
-    pygame.draw.rect(screen, FIELD_GREEN, (FIELD_X, FIELD_Y, FIELD_WIDTH, FIELD_HEIGHT))
+    pygame.draw.rect(screen, FIELD_GREEN, (fx, fy, fw, fh))
     
     # Draw border
-    pygame.draw.rect(screen, WHITE, (FIELD_X, FIELD_Y, FIELD_WIDTH, FIELD_HEIGHT), 2)
+    pygame.draw.rect(screen, WHITE, (fx, fy, fw, fh), 2)
     
     # Draw center line
-    center_x = FIELD_X + FIELD_WIDTH // 2
-    pygame.draw.line(screen, WHITE, (center_x, FIELD_Y), (center_x, FIELD_Y + FIELD_HEIGHT), 2)
+    center_x = fx + fw // 2
+    pygame.draw.line(screen, WHITE, (center_x, fy), (center_x, fy + fh), 2)
     
     # Draw center circle
-    center_y = FIELD_Y + FIELD_HEIGHT // 2
+    center_y = fy + fh // 2
     pygame.draw.circle(screen, WHITE, (center_x, center_y), 60, 2)
     
     # Draw center spot
     pygame.draw.circle(screen, WHITE, (center_x, center_y), 4)
     
     # Draw goals (openings on left and right)
-    goal_top = FIELD_Y + (FIELD_HEIGHT - GOAL_WIDTH) // 2
+    goal_top = fy + (fh - gw) // 2
     
     # Left goal
-    pygame.draw.rect(screen, WHITE, (FIELD_X - GOAL_DEPTH, goal_top, GOAL_DEPTH, GOAL_WIDTH), 2)
+    pygame.draw.rect(screen, WHITE, (fx - GOAL_DEPTH, goal_top, GOAL_DEPTH, gw), 2)
     
     # Right goal
-    pygame.draw.rect(screen, WHITE, (FIELD_X + FIELD_WIDTH, goal_top, GOAL_DEPTH, GOAL_WIDTH), 2)
+    pygame.draw.rect(screen, WHITE, (fx + fw, goal_top, GOAL_DEPTH, gw), 2)
 
 def render_player(screen, player):
     """Render player as rotated rectangle."""
