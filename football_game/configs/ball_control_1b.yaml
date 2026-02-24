@@ -1,6 +1,7 @@
-# Ball Control Stage 1b: Single ball at medium distance
-# Teaches: chasing, navigation to distant target
+# Ball Control Stage 1b: Chase target ball with distractors
+# Teaches: chasing specific target, ignoring distractions
 # Builds on: Stage 1a (learned to touch nearby balls)
+# NOTE: Must have same number of balls as Stage 1a for weight transfer!
 
 mode: ball_control
 stage: "1b"
@@ -13,30 +14,42 @@ field:
   start_x: 300
   start_y: 200
 
-# Single ball at medium distance from agent
+# Three balls (same as Stage 1a for observation space compatibility)
 balls:
-  - x: 400  # 200px away from agent at center
+  - x: 400  # TARGET ball - medium distance from agent
     y: 250
     vx: 0
     vy: 0
+    target: true  # Mark as target ball
+  - x: 50   # Distractor ball 1 - far corner
+    y: 50
+    vx: 0
+    vy: 0
+    target: false
+  - x: 550  # Distractor ball 2 - far corner
+    y: 350
+    vx: 0
+    vy: 0
+    target: false
 
-# Agent starting position (left side of field)
+# Agent starting position
 agent:
   x: 500
   y: 300
-  angle: 0  # Facing somewhat toward ball
+  angle: 0
 
 # No opponent
 opponent: null
 
 # Success criteria
 success_criteria:
-  min_avg_reward: 0.3  # Lower than 1a since ball is further
+  min_avg_reward: 0.3
   min_episodes: 50
-  max_steps: 1500  # Longer episodes (25 seconds)
+  max_steps: 1500
 
 # Rewards
 rewards:
-  touch: 0.05  # Higher reward for touching (harder to reach)
-  proximity: 0.002  # Reward for getting closer
+  touch_target: 0.08  # High reward for target ball
+  touch_distractor: 0.01  # Small reward for distractors
+  proximity: 0.002
   max_steps: 1500
