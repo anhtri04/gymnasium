@@ -60,10 +60,12 @@ def train_stage(config_path, timesteps=50000, load_from=None):
 
 def main():
     """Run curriculum training."""
-    # Define curriculum stages
+    # Define curriculum stages - progressive difficulty
     stages = [
-        ("configs/ball_control_1a.yaml", 50000),
-        ("configs/shooting_2a.yaml", 50000),
+        ("configs/ball_control_1a.yaml", 50000),  # 3 balls close
+        ("configs/ball_control_1b.yaml", 50000),  # 1 ball medium distance
+        ("configs/ball_control_1c.yaml", 50000),  # Must rotate first
+        ("configs/shooting_2a.yaml", 50000),    # Wide goal, ball at feet
     ]
     
     previous_model = None

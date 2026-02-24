@@ -1,0 +1,43 @@
+# Ball Control Stage 1c: Must rotate first
+# Teaches: directional control, rotation before movement
+# Builds on: Stage 1b (learned to chase)
+
+mode: ball_control
+stage: "1c"
+stage_name: "Ball Control - Rotation Control"
+
+# Field configuration
+field:
+  width: 500
+  height: 350
+  start_x: 350
+  start_y: 225
+
+# Single ball behind agent (must rotate 180 degrees)
+balls:
+  - x: 0  # Directly behind agent
+    y: -100
+    vx: 0
+    vy: 0
+
+# Agent starting position facing AWAY from ball
+agent:
+  x: 600
+  y: 400
+  angle: 0  # Facing right, ball is behind (left)
+
+# No opponent
+opponent: null
+
+# Success criteria
+success_criteria:
+  min_avg_reward: 0.2  # Even lower - rotation is hard
+  min_episodes: 50
+  max_steps: 2000  # Longer episodes (33 seconds)
+
+# Rewards
+rewards:
+  touch: 0.08  # High reward for touching
+  rotate_toward: 0.01  # Small reward for rotating toward ball
+  proximity: 0.003
+  max_steps: 2000

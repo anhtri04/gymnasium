@@ -1,0 +1,42 @@
+# Ball Control Stage 1b: Single ball at medium distance
+# Teaches: chasing, navigation to distant target
+# Builds on: Stage 1a (learned to touch nearby balls)
+
+mode: ball_control
+stage: "1b"
+stage_name: "Ball Control - Chase Medium Distance"
+
+# Field configuration
+field:
+  width: 600
+  height: 400
+  start_x: 300
+  start_y: 200
+
+# Single ball at medium distance from agent
+balls:
+  - x: 400  # 200px away from agent at center
+    y: 250
+    vx: 0
+    vy: 0
+
+# Agent starting position (left side of field)
+agent:
+  x: 500
+  y: 300
+  angle: 0  # Facing somewhat toward ball
+
+# No opponent
+opponent: null
+
+# Success criteria
+success_criteria:
+  min_avg_reward: 0.3  # Lower than 1a since ball is further
+  min_episodes: 50
+  max_steps: 1500  # Longer episodes (25 seconds)
+
+# Rewards
+rewards:
+  touch: 0.05  # Higher reward for touching (harder to reach)
+  proximity: 0.002  # Reward for getting closer
+  max_steps: 1500
