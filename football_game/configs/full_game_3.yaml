@@ -1,6 +1,6 @@
 # Stage 3: Full Game
-# Combines all skills: ball control, rotation, shooting, and defense
-# Agent plays against opponent in standard match
+# Combines all skills with active opponent
+# Uses standard 10-dim observation (same as all other stages)
 
 mode: full_game
 stage: "3"
@@ -13,9 +13,9 @@ field:
   start_x: 100
   start_y: 100
 
-# Single ball, starting positions vary per episode
+# Single ball at center
 balls:
-  - x: 500  # Center field
+  - x: 500
     y: 300
     vx: 0
     vy: 0
@@ -24,14 +24,14 @@ balls:
 agent:
   x: 300
   y: 400
-  angle: 0  # Facing right toward opponent goal
+  angle: 0
 
-# OPPONENT PRESENT
+# ACTIVE OPPONENT
 opponent:
-  type: "stationary"  # Start with stationary, can progress to "random"
-  x: 900  # Right side
+  type: "stationary"  # Can upgrade to "random" later
+  x: 900
   y: 400
-  angle: 180  # Facing left toward agent goal
+  angle: 180
 
 # Standard goal
 goal:
@@ -40,20 +40,15 @@ goal:
 
 # Success criteria
 success_criteria:
-  min_score_rate: 0.3  # Score 30% of episodes
+  min_score_rate: 0.3
   min_episodes: 100
-  max_steps: 3600  # 60 seconds at 60 FPS
-  win_rate: 0.4  # Win 40% of matches (score more than opponent)
+  max_steps: 3600
 
-# Rewards (all previous reward types)
+# All rewards enabled
 rewards:
   goal: 1.0
   concede: -1.0
   touch: 0.01
   kick: 0.05
   ball_progress: 0.1
-  opponent_half: 0.05
-  proximity_near: 0.2
-  proximity_closer: 0.3
-  proximity_closest: 0.4
   max_steps: 3600

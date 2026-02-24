@@ -1,7 +1,6 @@
-# Ball Control Stage 1c: Must rotate to face target ball
+# Ball Control Stage 1c: Must rotate to face ball
 # Teaches: directional control, rotation before movement
-# Builds on: Stage 1b (learned to chase)
-# NOTE: Must have same number of balls as Stage 1a for weight transfer!
+# Uses standard 10-dim observation for weight transfer compatibility
 
 mode: ball_control
 stage: "1c"
@@ -14,32 +13,25 @@ field:
   start_x: 350
   start_y: 225
 
-# Three balls (same as Stage 1a for observation space compatibility)
+# Single ball behind agent
 balls:
-  - x: 0  # TARGET ball - behind agent (must rotate 180°)
-    y: -100
+  - x: 500  # Behind agent (must rotate 180)
+    y: 400
     vx: 0
     vy: 0
-    target: true
-  - x: 200  # Distractor ball 1 - in front
-    y: -50
-    vx: 0
-    vy: 0
-    target: false
-  - x: -100  # Distractor ball 2 - side
-    y: 50
-    vx: 0
-    vy: 0
-    target: false
 
-# Agent starting position facing AWAY from target ball
+# Agent starting position facing AWAY from ball
 agent:
   x: 600
   y: 400
-  angle: 0  # Facing right, target ball is behind
+  angle: 0  # Facing right, ball is behind
 
-# No opponent
-opponent: null
+# Stationary opponent for observation consistency
+opponent:
+  type: "stationary"
+  x: 800
+  y: 400
+  angle: 180
 
 # Success criteria
 success_criteria:
@@ -49,8 +41,7 @@ success_criteria:
 
 # Rewards
 rewards:
-  touch_target: 0.08
-  touch_distractor: 0.01
+  touch: 0.1
   rotate_toward: 0.01
-  proximity: 0.003
+  proximity: 0.005
   max_steps: 2000

@@ -34,27 +34,19 @@ class ConfigurableFootballEnv(FootballEnv):
         
         self.mode = self.train_config.get('mode', 'full_game')
         
-        # Initialize parent with no opponent for training modes
-        opponent_type = None if self.mode in ['ball_control', 'shooting'] else 'stationary'
+        # Initialize parent - ALL modes use opponent for consistent 10-dim observation
+        opponent_type = self.train_config.get('opponent', {}).get('type', 'stationary')
         super().__init__(render_mode=render_mode, opponent_type=opponent_type)
         
         # Apply config
         self._apply_config()
         
-        # Override observation space based on mode
+        # STANDARD 10-DIM OBSERVATION SPACE for all stages
+        # [player1(3), player2(3), ball(4)] = 10 values
         from gymnasium import spaces
-        if self.mode == 'ball_control':
-            # 3 (player) + 4 * num_balls (balls)
-            num_balls = len(self.balls) if hasattr(self, 'balls') else 1
-            obs_dim = 3 + num_balls * 4
-            self.observation_space = spaces.Box(
-                low=0.0, high=1.0, shape=(obs_dim,), dtype=np.float32
-            )
-        elif self.mode == 'shooting':
-            # 9 values: player(3) + ball(4) + distance(1) + angle_diff(1)
-            self.observation_space = spaces.Box(
-                low=0.0, high=1.0, shape=(9,), dtype=np.float32
-            )
+        self.observation_space = spaces.Box(
+            low=0.0, high=1.0, shape=(10,), dtype=np.float32
+        )
     
     def _default_config(self) -> Dict:
         """Default config for full game."""
@@ -164,63 +156,54 @@ class ConfigurableFootballEnv(FootballEnv):
         return obs, info
     
     def _get_obs(self) -> np.ndarray:
-        """Get observation based on mode."""
-        if self.mode == 'ball_control':
-            return self._get_ball_control_obs()
-        elif self.mode == 'shooting':
-            return self._get_shooting_obs()
-        else:
-            return super()._get_obs()
-    
-    def _get_ball_control_obs(self) -> np.ndarray:
-        """Observation for ball control."""
+        """Get STANDARD 10-dim observation for all modes.
+        
+        Format: [player1_x, player1_y, player1_angle,
+                player2_x, player2_y, player2_angle,
+                ball_x, ball_y, ball_vx, ball_vy]
+        Total: 10 values - consistent across ALL curriculum stages
+        """
         from config import SCREEN_WIDTH, SCREEN_HEIGHT
         
-        obs = [
-            self.state.player1.x / SCREEN_WIDTH,
-            self.state.player1.y / SCREEN_HEIGHT,
-            self.state.player1.angle / 360.0
-        ]
-        
-        # Add all balls
-        for ball in self.balls:
-            obs.extend([
-                ball.x / SCREEN_WIDTH,
-                ball.y / SCREEN_HEIGHT,
-                (ball.vx / 20.0 + 1) / 2,
-                (ball.vy / 20.0 + 1) / 2
-            ])
-        
-        return np.array(obs, dtype=np.float32)
-    
-    def _get_shooting_obs(self) -> np.ndarray:
-        """Observation for shooting."""
-        from config import SCREEN_WIDTH, SCREEN_HEIGHT, FIELD_WIDTH, FIELD_HEIGHT, FIELD_X, FIELD_Y
-        
+        # Player 1 (agent) - 3 values
         p1_x = self.state.player1.x / SCREEN_WIDTH
         p1_y = self.state.player1.y / SCREEN_HEIGHT
         p1_angle = self.state.player1.angle / 360.0
         
-        ball_x = self.state.ball.x / SCREEN_WIDTH
-        ball_y = self.state.ball.y / SCREEN_HEIGHT
-        ball_vx = (self.state.ball.vx / 20.0 + 1) / 2
-        ball_vy = (self.state.ball.vy / 20.0 + 1) / 2
+        # Player 2 (opponent) - 3 values - ALWAYS present for consistency
+        if hasattr(self.state, 'player2') and self.state.player2 is not None:
+            p2_x = self.state.player2.x / SCREEN_WIDTH
+            p2_y = self.state.player2.y / SCREEN_HEIGHT
+            p2_angle = self.state.player2.angle / 360.0
+        else:
+            # Placeholder values if no opponent
+            p2_x = 0.75  # Far right side
+            p2_y = 0.5
+            p2_angle = 0.5
         
-        # Distance and angle to goal
-        goal_x = self.field_start_x + self.field_width
-        goal_y = self.field_start_y + self.field_height / 2
-        dx = goal_x - self.state.player1.x
-        dy = goal_y - self.state.player1.y
-        dist = math.sqrt(dx*dx + dy*dy)
-        
-        angle_to_goal = math.degrees(math.atan2(dy, dx))
-        angle_diff = (angle_to_goal - self.state.player1.angle + 180) % 360 - 180
+        # Ball - 4 values - use first ball or main ball
+        if hasattr(self, 'balls') and len(self.balls) > 0:
+            ball = self.balls[0]
+        else:
+            ball = self.state.ball
+            
+        ball_x = ball.x / SCREEN_WIDTH
+        ball_y = ball.y / SCREEN_HEIGHT
+        ball_vx = (ball.vx / 20.0 + 1) / 2
+        ball_vy = (ball.vy / 20.0 + 1) / 2
         
         obs = np.array([
-            p1_x, p1_y, p1_angle,
-            ball_x, ball_y, ball_vx, ball_vy,
-            min(dist / FIELD_WIDTH, 1.0),
-            (angle_diff + 180) / 360
+            p1_x, p1_y, p1_angle,  # Player 1: 3 values
+            p2_x, p2_y, p2_angle,  # Player 2: 3 values
+            ball_x, ball_y, ball_vx, ball_vy  # Ball: 4 values
         ], dtype=np.float32)
         
         return np.clip(obs, 0.0, 1.0)
+    
+    def _get_ball_control_obs(self) -> np.ndarray:
+        """DEPRECATED: Use standard _get_obs instead."""
+        return self._get_obs()
+    
+    def _get_shooting_obs(self) -> np.ndarray:
+        """DEPRECATED: Use standard _get_obs instead."""
+        return self._get_obs()

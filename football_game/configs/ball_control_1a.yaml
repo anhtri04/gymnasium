@@ -1,49 +1,46 @@
-# Ball Control Stage 1a: Multiple balls, close proximity
+# Ball Control Stage 1a: Single ball close to agent
 # Teaches: movement, rotation, chasing, touching
+# Uses standard 10-dim observation for weight transfer compatibility
 
 mode: ball_control
 stage: "1a"
-stage_name: "Ball Control - Close Balls"
+stage_name: "Ball Control - Close Ball"
 
-# Field configuration (small field)
+# Field configuration
 field:
   width: 400
   height: 300
-  start_x: 400  # Centered on screen (FIELD_X = 100 in full game)
+  start_x: 400
   start_y: 250
 
-# Multiple balls close together
+# Single ball (for 10-dim observation consistency)
 balls:
-  - x: 500  # Relative to field start
-    y: 350
-    vx: 0
-    vy: 0
-  - x: 600
-    y: 400
-    vx: 0
-    vy: 0
-  - x: 550
-    y: 300
+  - x: 620  # Close to agent
+    y: 420
     vx: 0
     vy: 0
 
-# Agent starting position (center of field)
+# Agent starting position
 agent:
   x: 600
   y: 400
   angle: 0
 
-# No opponent in training
-opponent: null
+# Stationary opponent for observation consistency
+opponent:
+  type: "stationary"
+  x: 750  # Far away, not interfering
+  y: 400
+  angle: 180
 
-# Success criteria for stage advancement
+# Success criteria
 success_criteria:
-  min_avg_reward: 0.5  # Average 0.5 reward per step
+  min_avg_reward: 0.5
   min_episodes: 50
-  consecutive_success_episodes: 10
+  max_steps: 1000
 
-# Rewards (dense feedback)
+# Rewards
 rewards:
-  touch: 0.02  # Higher reward for touching
-  proximity: 0.001  # Small reward for getting closer
-  max_steps: 1000  # Episode ends after 1000 steps or timeout
+  touch: 0.05
+  proximity: 0.002
+  max_steps: 1000
