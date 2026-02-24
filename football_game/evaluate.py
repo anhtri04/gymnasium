@@ -89,6 +89,9 @@ def evaluate_agent(model_path, config=None, num_episodes=5, delay=1/60):
                 action, _states = model.predict(obs, deterministic=True)
                 obs, reward, terminated, truncated, info = env.step(action)
                 
+                # RENDER THE GAME! (This shows the pygame window)
+                env.render()
+                
                 episode_reward += reward
                 steps += 1
                 

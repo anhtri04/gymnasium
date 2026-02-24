@@ -59,6 +59,9 @@ def evaluate(model_path="models/full_game_3", num_episodes=5):
                 action, _states = model.predict(obs, deterministic=True)
                 obs, reward, terminated, truncated, info = env.step(action)
                 
+                # RENDER THE GAME!
+                env.render()
+                
                 episode_reward += reward
                 steps += 1
                 
